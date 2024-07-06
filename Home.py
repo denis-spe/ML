@@ -7,6 +7,8 @@ import streamlit as st
 from components.conf import config_page
 from components.check_data_present import data_present
 import pandas as pd
+from typing import List, Tuple
+
 
 
 # Config the page
@@ -15,9 +17,6 @@ config_page("ML", "logo.png")
 
 # Side bar
 sidebar = st.sidebar
-
-# Add icon image in the side bar
-sidebar.image("resources/images/logo.png")
 
 # Upload the file
 uploaded_files = sidebar.file_uploader(
@@ -40,7 +39,7 @@ def get_continuous_column(df: pd.DataFrame) -> list:
     return df.select_dtypes(include=['float64', 'int64']).columns.tolist()
 
 
-def display_describe(idx: int, selected: str = "DataFrame") -> None:
+def display_describe(pd_files: List[Tuple[str, pd.DataFrame]], selected: str = "DataFrame") -> None:
     """
     Display the data frame
     Parameter
@@ -48,14 +47,10 @@ def display_describe(idx: int, selected: str = "DataFrame") -> None:
     idx : int
         The index of the uploaded file
     """
-    # Get the first uploaded file.
-    data_path = uploaded_files[idx]
+    # Get title
+    title = pd_files[0].split('.')[0].title()
+    df = pd_files[1]
 
-    # Get the title of the file.
-    title = data_path.name.split('.')[0].title()
-
-    # Read the data frame
-    df = read_csv(data_path)
 
     st.markdown(f"""
     #### **:blue[{title}] Dataset**
@@ -83,16 +78,17 @@ def display_describe(idx: int, selected: str = "DataFrame") -> None:
             """)
             st.write(df.describe(include=[object]))
 
+    if selected == "Data Type":
+        st.write(df.dtypes)
 
 
-
-
-def display_content_for_uploaded_files():
+def display_content_for_uploaded_files(pd_files: dict):
     """
     Display the content for uploaded files
     """
-    # Add the uploaded files in session_state
-    st.session_state["uploaded_files"] = uploaded_files
+    
+    # Make pd_files items 
+    files = list(pd_files.items())
 
     # Description
     st.subheader(":blue[Data] Statistic")
@@ -102,22 +98,18 @@ def display_content_for_uploaded_files():
             options=["DataFrame", "Describe", "Data Type"], 
             horizontal=True)
 
-    if len(uploaded_files) == 2:
+    if len(files) == 2:
+        # Columns
         col1, col2 = st.columns(2)
 
         with col1:
-            display_describe(0, selected)
+            display_describe(files[0], selected)
 
         with col2:
-            display_describe(1, selected)
+            display_describe(files[1], selected)
 
     else:
-        display_describe(0)
-
-
-
-
-
+        display_describe(0, selected=selected)
 
 
 
@@ -137,8 +129,17 @@ def display_content_for_no_uploaded_files():
 
 # Display content
 if len(uploaded_files) > 0:
-    display_content_for_uploaded_files()
+    files = {
+        file.name: pd.read_csv(file) 
+        for file in uploaded_files
+        }
+    
+    # Add the files to the session
+    for file in files:
+        st.session_state[file] = files[file]
+
+    display_content_for_uploaded_files(pd_files=files)
+    
 else:
     display_content_for_no_uploaded_files()
-
 
