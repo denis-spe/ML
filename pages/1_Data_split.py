@@ -27,7 +27,15 @@ def display_content_for_uploaded_files():
     # Drop down selector for csv data frame
     selected_csv_name = st.selectbox(
         "Select the dataset", 
-        session.keys())
+        [
+            file_name
+            for file_name in session.keys()
+            if file_name not in [
+                "x_train",
+                "y_train",
+                "x_test",
+                "y_test"]
+            ])
     
     # Get the selected data frame
     selected_df = session[selected_csv_name]
@@ -68,13 +76,17 @@ def display_content_for_uploaded_files():
     columns = list(selected_df.columns)
     columns.insert(0, "None")
     
-    strategy = st.sidebar.selectbox(
-                "strategy",
-                columns
+    stratify = st.sidebar.radio(
+                "stratify",
+                [False, True],
+                horizontal=True
                 )
     
     # Shuffle the train data
-    shuffle = st.sidebar.radio("Shuffle", [False, True], horizontal=True)
+    shuffle = st.sidebar.radio(
+        "Shuffle", 
+        [False, True], 
+        horizontal=True)
     
 
     # Split the data into train and validation set
@@ -83,10 +95,36 @@ def display_content_for_uploaded_files():
         train_size=train_size,
         test_size=test_size, 
         random_state=int(random_state),
-        shuffle=shuffle
+        shuffle=shuffle,
+        stratify=y if stratify else None
         )
 
-    st.write(x_train)
+    if st.button("Split"):
+        
+        st.markdown(
+            f"""
+            >:blue[**Summary**]\n
+            **X train:** {x_train.shape[0]} rows and {x_train.shape[1]} columns\n
+            **Y train:** {y_train.shape[0]} rows\n
+            **X test:**  {x_test.shape[0]} rows and {x_test.shape[1]} columns\n
+            **Y test:**  {y_test.shape[0]} rows\n
+            
+            >:blue[**Used Parameters**]\n
+            **Train size:** {int(train_size * 100)}%\n
+            **Test size:** {int(test_size * 100)}%\n
+            **Random state:** {random_state}\n
+            **Shuffle:** {shuffle}\n
+            **Stratify:** {stratify}\n
+            """)
+        
+        # Save the data samples in session 
+        st.session_state["x_train"] = x_train
+        st.session_state["y_train"] = y_train
+        st.session_state["x_test"] = x_test
+        st.session_state["y_test"] = y_test
+        
+    st.page_link("Home.py", label="Previous: Home")
+    st.page_link("pages/2_Data_cleaning.py", label="Next: Data cleaning")
 
 
 

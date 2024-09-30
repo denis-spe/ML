@@ -110,6 +110,9 @@ def display_content_for_uploaded_files(pd_files: dict):
 
     else:
         display_describe(0, selected=selected)
+    
+    if st.button("Data split"):    
+        st.switch_page("pages/1_Data_split.py")
 
 
 
@@ -130,14 +133,22 @@ def display_content_for_no_uploaded_files():
 # Display content
 if len(uploaded_files) > 0:
     files = {
-        file.name: pd.read_csv(file) 
+        file.name.split(".")[0]: pd.read_csv(file) 
         for file in uploaded_files
         }
-    
+    st.write(st.session_state)
     # Add the files to the session
     for file in files:
         st.session_state[file] = files[file]
 
+    display_content_for_uploaded_files(pd_files=files)
+elif len(st.session_state) > 0:
+    files = {
+        key: value 
+        for key, value in st.session_state.items()
+        if key not in ["x_train", "y_train", "x_test", "y_test"]
+    }
+    
     display_content_for_uploaded_files(pd_files=files)
     
 else:
