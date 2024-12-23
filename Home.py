@@ -10,7 +10,6 @@ import pandas as pd
 from typing import List, Tuple
 
 
-
 # Config the page
 config_page("ML", "logo.png")
 
@@ -136,7 +135,7 @@ if len(uploaded_files) > 0:
         file.name.split(".")[0]: pd.read_csv(file) 
         for file in uploaded_files
         }
-    st.write(st.session_state)
+    
     # Add the files to the session
     for file in files:
         st.session_state[file] = files[file]
