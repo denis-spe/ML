@@ -6,6 +6,7 @@
 import streamlit as st
 from components.conf import config_page
 from sklearn.model_selection import train_test_split
+from const import FOOTER_CONTENT
 
 
 # Config the page
@@ -152,3 +153,6 @@ if len(st.session_state) > 0:
 else:
     # Display the content for no uploaded files
     display_content_for_no_uploaded_files()
+
+st.markdown(FOOTER_CONTENT, unsafe_allow_html=True)
+sidebar.markdown(FOOTER_CONTENT, unsafe_allow_html=True)

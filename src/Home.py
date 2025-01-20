@@ -8,6 +8,7 @@ from components.conf import config_page
 from components.check_data_present import data_present
 import pandas as pd
 from typing import List, Tuple
+from const import FOOTER_CONTENT
 
 
 # Config the page
@@ -19,10 +20,8 @@ sidebar = st.sidebar
 
 # Upload the file
 uploaded_files = sidebar.file_uploader(
-    label=":blue[Upload a CSV files]", 
-    type=["csv"],
-    accept_multiple_files=True
-    )
+    label=":blue[Upload a CSV files]", type=["csv"], accept_multiple_files=True
+)
 
 
 def read_csv(path: str) -> pd.DataFrame:
@@ -31,14 +30,17 @@ def read_csv(path: str) -> pd.DataFrame:
     """
     return pd.read_csv(path)
 
+
 def get_continuous_column(df: pd.DataFrame) -> list:
     """
     Get the continuous column
     """
-    return df.select_dtypes(include=['float64', 'int64']).columns.tolist()
+    return df.select_dtypes(include=["float64", "int64"]).columns.tolist()
 
 
-def display_describe(pd_files: List[Tuple[str, pd.DataFrame]], selected: str = "DataFrame") -> None:
+def display_describe(
+    pd_files: List[Tuple[str, pd.DataFrame]], selected: str = "DataFrame"
+) -> None:
     """
     Display the data frame
     Parameter
@@ -47,34 +49,41 @@ def display_describe(pd_files: List[Tuple[str, pd.DataFrame]], selected: str = "
         The index of the uploaded file
     """
     # Get title
-    title = pd_files[0].split('.')[0].title()
+    title = pd_files[0].split(".")[0].title()
     df = pd_files[1]
 
-
-    st.markdown(f"""
+    st.markdown(
+        f"""
     #### **:blue[{title}] Dataset**
-    """)
+    """
+    )
 
     if selected == "DataFrame":
-        st.markdown(f"""
+        st.markdown(
+            f"""
         ##### \n
         _The dataset contains **:blue[{df.shape[0]}]** rows and **:blue[{df.shape[1]}]** columns._\n
-        """)
-        
+        """
+        )
+
         st.write(df)
 
     if selected == "Describe":
         cont, cat = st.tabs(["continuous describe", "categorical describe"])
         with cont:
-            st.markdown(f"""
+            st.markdown(
+                f"""
                 _{title} Dataset description_\n
-            """)
+            """
+            )
             st.write(df.describe())
-        
+
         with cat:
-            st.markdown(f"""
+            st.markdown(
+                f"""
                 _{title} Dataset description_\n
-            """)
+            """
+            )
             st.write(df.describe(include=[object]))
 
     if selected == "Data Type":
@@ -85,17 +94,17 @@ def display_content_for_uploaded_files(pd_files: dict):
     """
     Display the content for uploaded files
     """
-    
-    # Make pd_files items 
+
+    # Make pd_files items
     files = list(pd_files.items())
 
     # Description
     st.subheader(":blue[Data] Statistic")
 
     # Get the selected option
-    selected = st.radio("", 
-            options=["DataFrame", "Describe", "Data Type"], 
-            horizontal=True)
+    selected = st.radio(
+        "", options=["DataFrame", "Describe", "Data Type"], horizontal=True
+    )
 
     if len(files) == 2:
         # Columns
@@ -109,10 +118,9 @@ def display_content_for_uploaded_files(pd_files: dict):
 
     else:
         display_describe(0, selected=selected)
-    
-    if st.button("Data split"):    
-        st.switch_page("pages/1_Data_split.py")
 
+    if st.button("Data split"):
+        st.switch_page("pages/1_Data_split.py")
 
 
 def display_content_for_no_uploaded_files():
@@ -120,10 +128,12 @@ def display_content_for_no_uploaded_files():
     Display the content for no uploaded files
     """
     # Descriptions
-    st.markdown("""
-                **:blue[Upload the dataset in format CSV files].**\n
-                _Load train data and test data or you load only train data._\n
-                """)
+    st.markdown(
+        """
+        **:blue[Upload the dataset in format CSV files].**\n
+        _Load train data and test data or you load only train data._\n
+        """
+    )
 
     # Load images
     st.image("resources/images/upload.svg", width=200)
@@ -131,11 +141,8 @@ def display_content_for_no_uploaded_files():
 
 # Display content
 if len(uploaded_files) > 0:
-    files = {
-        file.name.split(".")[0]: pd.read_csv(file) 
-        for file in uploaded_files
-        }
-    
+    files = {file.name.split(".")[0]: pd.read_csv(file) for file in uploaded_files}
+
     # Add the files to the session
     for file in files:
         st.session_state[file] = files[file]
@@ -143,13 +150,15 @@ if len(uploaded_files) > 0:
     display_content_for_uploaded_files(pd_files=files)
 elif len(st.session_state) > 0:
     files = {
-        key: value 
+        key: value
         for key, value in st.session_state.items()
         if key not in ["x_train", "y_train", "x_test", "y_test"]
     }
-    
+
     display_content_for_uploaded_files(pd_files=files)
-    
+
 else:
     display_content_for_no_uploaded_files()
-
+    
+st.markdown(FOOTER_CONTENT, unsafe_allow_html=True)
+sidebar.markdown(FOOTER_CONTENT, unsafe_allow_html=True)

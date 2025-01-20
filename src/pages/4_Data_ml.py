@@ -7,21 +7,17 @@ import streamlit as st
 from components.conf import config_page
 
 # Config the page
-config_page("ML | Data Visualization", "visual.png")
+config_page("ML | Data ML", "machine.png")
 
 # Side bar
 sidebar = st.sidebar
-
-# Add icon image in the side bar
-sidebar.image("resources/images/visual.png", width=50)
-
 
 def display_content_for_uploaded_files():
     """
     Display the content for uploaded files
     """
     # Descriptions
-    st.write(":blue[Visualize the training, validation and test data]")
+    st.write(":blue[Training up the model with train data]")
 
 
 def display_content_for_no_uploaded_files():
@@ -31,13 +27,13 @@ def display_content_for_no_uploaded_files():
     # Descriptions
     desc = """
     **:blue[Clean up the training, validation and test data].**\n
-    _To start visualizing the clean training, validation and test data._\n
+    _To start training the models._\n
     """
     st.markdown(desc)
     sidebar.markdown(desc)
 
     # Load images
-    st.image("resources/images/visual.svg", width=200)
+    st.image("resources/images/machine.svg", width=200)
 
 
 if len(st.session_state) > 0:
