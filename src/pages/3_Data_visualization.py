@@ -4,6 +4,7 @@
 
 # Import libraries
 import streamlit as st
+from const import FOOTER_CONTENT
 from components.conf import config_page
 
 # Config the page
@@ -34,7 +35,7 @@ def display_content_for_no_uploaded_files():
     sidebar.markdown(desc)
 
     # Load images
-    st.image("resources/images/visual.svg", width=200)
+    st.image("../resources/images/visual.svg", width=200)
 
 
 if len(st.session_state) > 0:
@@ -43,3 +44,6 @@ if len(st.session_state) > 0:
 else:
     # Display the content for no uploaded files
     display_content_for_no_uploaded_files()
+    
+st.markdown(FOOTER_CONTENT, unsafe_allow_html=True)
+sidebar.markdown(FOOTER_CONTENT, unsafe_allow_html=True)

@@ -24,7 +24,7 @@ def nan_chart(df: pd.DataFrame):
                     .encode(
                         x="column",
                         y="number of missing values (NaN)",
-                        radius=cornerRadius_var
+                        # radius=cornerRadius_var
                         ))
     
     st.altair_chart(bar_chart)

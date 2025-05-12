@@ -112,12 +112,12 @@ def display_content_for_uploaded_files(pd_files: dict):
 
         with col1:
             display_describe(files[0], selected)
-
+            
         with col2:
             display_describe(files[1], selected)
 
     else:
-        display_describe(0, selected=selected)
+        display_describe(files[0], selected=selected)
 
     if st.button("Data split"):
         st.switch_page("pages/1_Data_split.py")
@@ -136,7 +136,7 @@ def display_content_for_no_uploaded_files():
     )
 
     # Load images
-    st.image("resources/images/upload.svg", width=200)
+    st.image("../resources/images/upload.svg", width=200)
 
 
 # Display content

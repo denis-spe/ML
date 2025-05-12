@@ -123,6 +123,7 @@ def display_content_for_uploaded_files():
         st.session_state["y_train"] = y_train
         st.session_state["x_test"] = x_test
         st.session_state["y_test"] = y_test
+        st.session_state["columns"] = x_train.columns
         
     st.page_link("Home.py", label="Previous: Home")
     st.page_link("pages/2_Data_cleaning.py", label="Next: Data cleaning")
@@ -144,7 +145,7 @@ def display_content_for_no_uploaded_files():
                 """)
 
     # Load images
-    st.image("resources/images/split.svg", width=200)
+    st.image("../resources/images/split.svg", width=200)
 
 
 if len(st.session_state) > 0:
