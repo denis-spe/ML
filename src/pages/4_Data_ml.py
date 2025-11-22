@@ -34,7 +34,7 @@ def display_content_for_no_uploaded_files():
     sidebar.markdown(desc)
 
     # Load images
-    st.image("../resources/images/machine.svg", width=200)
+    st.image("./resources/images/machine.svg", width=200)
 
 
 if len(st.session_state) > 0:

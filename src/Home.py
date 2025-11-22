@@ -136,7 +136,7 @@ def display_content_for_no_uploaded_files():
     )
 
     # Load images
-    st.image("../resources/images/upload.svg", width=200)
+    st.image("./resources/images/upload.svg", width=200)
 
 
 # Display content

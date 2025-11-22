@@ -36,15 +36,18 @@ def nan_donut(df: pd.DataFrame):
     Args:
         df: (pd.DataFrame) pandas data frame.
     """
-    isna = df.isna().sum().reset_index()
+    isna = df.isna().sum()
+    isna = (isna / df.shape[0]).round(4)
+    isna = isna.reset_index()
+
     # Rename the columns
-    isna.columns = ["column", "number of missing values (NaN)"]
+    isna.columns = ["column", "percentage of missing values (NaN)"]
     
     # Filter the only the missing value greater then 0
-    isna = isna[isna["number of missing values (NaN)"] > 0]
+    isna = isna[isna["percentage of missing values (NaN)"] > 0]
     
     donut = alt.Chart(isna).mark_arc(innerRadius=50).encode(
-        theta="number of missing values (NaN)",
+        theta="percentage of missing values (NaN)",
         color="column",
         )
     st.altair_chart(donut)
