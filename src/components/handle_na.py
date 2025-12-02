@@ -104,6 +104,7 @@ def fill_NaN_or_drop(
     fill_na_in_numeric,
     fill_na_in_categorical,
     column_to_drop,
+    fill_column_dict,
     x_train=None,
     x_test=None,
     test=None

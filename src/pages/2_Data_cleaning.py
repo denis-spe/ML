@@ -32,8 +32,11 @@ def nan_df_style(df: pd.DataFrame):
     )
 
 
+fill_column_dict = st.session_state["fill_value"]
+
+
 # Side bar
-sidebar: st = st.sidebar
+sidebar = st.sidebar
 
 
 def display_content_for_uploaded_files():
@@ -52,6 +55,18 @@ def display_content_for_uploaded_files():
 
     # Fill in the missing values the data
     sidebar.subheader("Fill in the missing values (NaN)", divider=True)
+    column_fill = sidebar.selectbox(
+        "Select a column to fill",
+        options=st.session_state["columns"],
+    )
+
+    value_to_fill = sidebar.selectbox(
+        "Select a value to fill NA",
+        options=[None, "mean"],
+    )
+    fill_column_dict[column_fill] = value_to_fill
+
+
     column_drop = sidebar.multiselect(
         "Drop a column",
         options=st.session_state["columns"]
@@ -101,6 +116,7 @@ def display_content_for_uploaded_files():
             fill_na_in_numeric,
             fill_na_in_categorical,
             column_drop,
+            fill_column_dict = fill_column_dict,
             x_train=x_train,
             x_test=x_test
         )
@@ -145,6 +161,7 @@ def display_content_for_uploaded_files():
             fill_na_in_numeric,
             fill_na_in_categorical,
             column_drop,
+            fill_column_dict = fill_column_dict,
             x_train=None,
             x_test=None,
             test=test_df

@@ -124,6 +124,7 @@ def display_content_for_uploaded_files():
         st.session_state["x_test"] = x_test
         st.session_state["y_test"] = y_test
         st.session_state["columns"] = x_train.columns
+        st.session_state["fill_value"] = dict(((col, "None") for col in x_train.columns))
         
     st.page_link("Home.py", label="Previous: Home")
     st.page_link("pages/2_Data_cleaning.py", label="Next: Data cleaning")
